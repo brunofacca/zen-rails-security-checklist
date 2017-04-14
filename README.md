@@ -469,8 +469,8 @@ become a collaborator.
 - [The Rails 4 Way by Obie Fernandez](https://www.amazon.com/Ruby-Rails-Tutorial-Addison-Wesley-Professional/dp/0134598628/ref=pd_lpo_sbs_14_t_0?_encoding=UTF8&psc=1&refRID=G6PXCRKW09VRHMY07MV2), Chapter 15
 - [OWASP Top Ten](https://www.owasp.org/index.php/Top_10_2013-Top_10)
 - [SitePoint: Common Rails Security Pitfalls and Their Solutions](https://www.sitepoint.com/common-rails-security-pitfalls-and-their-solutions/)
-- [Rails Security Checklist by Hardhat](https://github.com/hardhatdigital/rails-security-audit)
-- [Rails Security Audit List by Eliot Sykes](https://github.com/eliotsykes/rails-security-checklist)
+- [Rails Security Audit by Hardhat](https://github.com/hardhatdigital/rails-security-audit)
+- [Rails Security Checklist by Eliot Sykes](https://github.com/eliotsykes/rails-security-checklist)
 
 ## License
 
