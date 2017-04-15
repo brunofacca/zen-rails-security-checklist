@@ -37,23 +37,34 @@ Resources:
 - [Rails SQL Injection Examples](https://rails-sqli.org/)
 
 #### Authentication (Devise)
+
 Broken Authentication and Session Management are #2 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
-- [ ] Enforce strong passwords. A minimum of 8 characters including at least one
-lower case letter, one upper case letter, one number and one special character
-is safe enough for most applications. Devise only validates password length.
-Gems such as
+- [ ] Enforce a minimum password length of 8 characters or more. *Mitigates
+brute-force attacks.*
+- [ ] Consider validating passwords against:
+    - Dictionary words. Since passwords have a minimum length requirement, the
+   dictionary need only include words meeting that requirement. 
+   - A list of commonly used passwords such as
+   [these](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
+   The [password_strength](https://github.com/fnando/password_strength) and
+   [StrongPassword](https://github.com/bdmac/strong_password) gems provide such
+   feature.
+    - A leaked password database such as [PasswordPing](https://www.passwordping.com/docs-passwords-api/).
+    - Context-specific words, such as the name of the application, the
+    username, and derivatives thereof.
+- [ ] Consider the pros and cons of enforcing password complexity rules such as
+mixtures of different character types. Most applications use it. However, the
+latest [NIST Guidelines](https://pages.nist.gov/800-63-3/sp800-63b.html) advise
+against it. An alternative is to increase the minimum length requirement and
+encourage the usage of passphrases. Devise only validates password length. Gems
+such as
 [devise_security_extension](https://github.com/phatworx/devise_security_extension),
 [StrongPassword](https://github.com/bdmac/strong_password),
 [devise_zxcvbn](https://github.com/bitzesty/devise_zxcvbn), and
 [password_strength](https://github.com/fnando/password_strength) provide
-additional password validation capabilities, such as entropy calculation.
-Validation may also be implemented with regex ([code
-sample](#password-validation-regex)). Mitigates brute-force attacks.*
-- [ ] Consider validating passwords against a dictionary or [a list containing
-the most commonly used passwords](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
- The [password_strength](https://github.com/fnando/password_strength) and
-[StrongPassword](https://github.com/bdmac/strong_password) gems provide such
-feature. *Mitigates brute-force attacks.*
+additional password validation capabilities, such as entropy calculation (based
+on password complexity). Validation may also be implemented with regex
+ ([code sample](#password-validation-regex)). *Mitigate brute-force attacks.*
 - [ ] Lock the account after multiple failed login attempts. Use Devise's 
 [lockable module](https://github.com/plataformatec/devise/wiki/How-To:-Add-:lockable-to-Users).
 *Mitigates brute-force attacks.*
