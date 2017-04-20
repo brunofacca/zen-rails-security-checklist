@@ -388,7 +388,7 @@ servers.
 - [ ] Update Ruby frequently.
 - [ ] Watch out for security vulnerabilities in your gems. Run 
 [bundler-audit](https://github.com/rubysec/bundler-audit) frequently or use a
- service like [Appcanary](https://appcanary.com/).
+ service like [Snyk](https://snyk.io) (free for open-source development) or [Appcanary](https://appcanary.com/).
 
 #### Security Tools
 - [ ] Run [Brakeman](http://brakemanscanner.org/) before each deploy. 
