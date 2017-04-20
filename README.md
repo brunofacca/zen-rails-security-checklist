@@ -387,8 +387,10 @@ Puma, Unicorn), web servers (Nginx, Apache, Passenger Standalone) and SSH
 servers. 
 - [ ] Update Ruby frequently.
 - [ ] Watch out for security vulnerabilities in your gems. Run 
-[bundler-audit](https://github.com/rubysec/bundler-audit) frequently or use a
- service like [Snyk](https://snyk.io) (free for open-source development) or [Appcanary](https://appcanary.com/).
+[bundler-audit](https://github.com/rubysec/bundler-audit) frequently or use 
+a service like [Snyk](https://snyk.io), [Gemnasium](https://gemnasium.com/) 
+(both free for open-source development) or [Appcanary](https://appcanary.com/).
+
 
 #### Security Tools
 - [ ] Run [Brakeman](http://brakemanscanner.org/) before each deploy. 
@@ -401,6 +403,8 @@ engine](https://docs.codeclimate.com/v1.0/docs/brakeman).
 [NAXSI](https://github.com/nbs-system/naxsi) for Nginx, 
 [ModSecurity](https://github.com/SpiderLabs/ModSecurity) for Apache and Nginx. 
 *Mitigates XSS, SQL Injection, DoS, and many other attacks.*
+- [ ] Make sure you don't use insecure dependencies with [Gemnasium](https://gemnasium.com/). They notify you when you have insecure dependencies, and how to fix it.
+If using an automated code review tool like 
 
 #### Others
 - [ ] Use strong parameters in the controllers. This is the default behavior 
