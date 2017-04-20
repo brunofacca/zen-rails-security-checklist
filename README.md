@@ -366,6 +366,11 @@ engine](https://docs.codeclimate.com/v1.0/docs/brakeman).
 [NAXSI](https://github.com/nbs-system/naxsi) for Nginx, 
 [ModSecurity](https://github.com/SpiderLabs/ModSecurity) for Apache and Nginx. 
 *Mitigates XSS, SQL Injection, DoS, and many other attacks.*
+- [ ] [Rack::CanonicalHost](https://github.com/tylerhunt/rack-canonical-host)
+lets you set a safelist of hostnames. Handy for development environments, which
+might be unknowingly exposed by Pow's .xip.io domain (e.g. http://myapp.10.0.1.43.xip.io)
+- [ ] [Rack::Attack](https://github.com/kickstarter/rack-attack) lets you
+block and throttle abusive clients in Ruby.
 
 #### Others
 - [ ] Use strong parameters in the controllers. This is the default behavior 
