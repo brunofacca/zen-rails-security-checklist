@@ -403,7 +403,7 @@ engine](https://docs.codeclimate.com/v1.0/docs/brakeman).
 [NAXSI](https://github.com/nbs-system/naxsi) for Nginx, 
 [ModSecurity](https://github.com/SpiderLabs/ModSecurity) for Apache and Nginx. 
 *Mitigates XSS, SQL Injection, DoS, and many other attacks.*
-- [ ] Make sure you don't use insecure dependencies with [Gemnasium](https://gemnasium.com/). They notify you when you have insecure dependencies, and how to fix it.
+
 
 #### Others
 - [ ] Use strong parameters in the controllers. This is the default behavior 
