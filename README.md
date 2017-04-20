@@ -387,8 +387,10 @@ Puma, Unicorn), web servers (Nginx, Apache, Passenger Standalone) and SSH
 servers. 
 - [ ] Update Ruby frequently.
 - [ ] Watch out for security vulnerabilities in your gems. Run 
-[bundler-audit](https://github.com/rubysec/bundler-audit) frequently or use a
- service like [Gemnasium](https://gemnasium.com/) (free for open source, forever) or [Appcanary](https://appcanary.com/).
+[bundler-audit](https://github.com/rubysec/bundler-audit) frequently or use 
+a service like [Snyk](https://snyk.io), [Gemnasium](https://gemnasium.com/) 
+(both free for open-source development) or [Appcanary](https://appcanary.com/).
+
 
 #### Security Tools
 - [ ] Run [Brakeman](http://brakemanscanner.org/) before each deploy. 
