@@ -92,7 +92,7 @@ administrator to revoke the attacker's access.*
 of specifying which part (e-mail or password) is invalid. Devise does that by
  default. *Mitigates user enumeration and brute-force attacks.*
 - [ ] Ensure all non-public controllers/actions require authentication. Add
- `before_acion :authenticate_user!` to `ApplicationController` and 
+ `before_action :authenticate_user!` to `ApplicationController` and 
  `skip_before_action :authenticate_user!` to publicly accessible 
  controllers/actions. *Avoid unauthorized access due to developer 
  forgetfulness.*
