@@ -1,3 +1,38 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Zen Rails Security Checklist](#zen-rails-security-checklist)
+  - [Summary](#summary)
+  - [Supported Rails Versions](#supported-rails-versions)
+  - [The Checklist](#the-checklist)
+      - [Injection](#injection)
+      - [Authentication (Devise)](#authentication-devise)
+      - [Sessions & Cookies](#sessions--cookies)
+      - [Cross-Site Scripting (XSS)](#cross-site-scripting-xss)
+          - [Handling User Input](#handling-user-input)
+      - [HTTP & TLS](#http--tls)
+      - [Authorization (Pundit)](#authorization-pundit)
+      - [Files](#files)
+          - [File Uploads](#file-uploads)
+      - [Cross-Site Request Forgery (CSRF)](#cross-site-request-forgery-csrf)
+      - [Sensitive Data Exposure](#sensitive-data-exposure)
+      - [Routing, Template Selection, and Redirection](#routing-template-selection-and-redirection)
+      - [Third-party Software](#third-party-software)
+      - [Security Tools](#security-tools)
+      - [Others](#others)
+  - [Details and Code Samples](#details-and-code-samples)
+      - [Password validation regex](#password-validation-regex)
+      - [Pundit: ensure all actions are authorized](#pundit-ensure-all-actions-are-authorized)
+      - [Pundit: only display appropriate records in select boxes](#pundit-only-display-appropriate-records-in-select-boxes)
+      - [Convert filter_parameters into a whitelist](#convert-filter_parameters-into-a-whitelist)
+  - [Authors](#authors)
+  - [Contributing](#contributing)
+  - [References and Further Reading](#references-and-further-reading)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Zen Rails Security Checklist
 
 
