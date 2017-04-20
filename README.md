@@ -404,7 +404,6 @@ engine](https://docs.codeclimate.com/v1.0/docs/brakeman).
 [ModSecurity](https://github.com/SpiderLabs/ModSecurity) for Apache and Nginx. 
 *Mitigates XSS, SQL Injection, DoS, and many other attacks.*
 - [ ] Make sure you don't use insecure dependencies with [Gemnasium](https://gemnasium.com/). They notify you when you have insecure dependencies, and how to fix it.
-If using an automated code review tool like 
 
 #### Others
 - [ ] Use strong parameters in the controllers. This is the default behavior 
