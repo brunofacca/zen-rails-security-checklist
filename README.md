@@ -1,6 +1,25 @@
+# Zen Rails Security Checklist
+
+## Summary
+This document provides a list of security measures to be implemented when 
+developing a Ruby on Rails application. It is designed to serve as a quick 
+reference and minimize vulnerabilities caused by developer forgetfulness. 
+
+This checklist is meant to be a community-driven resource. Your 
+[contributions](#contributing) are welcome! 
+
+**Disclaimer**: This document does not cover all possible security 
+vulnerabilities. The authors do not take any legal responsibility for the 
+accuracy or completeness of the information herein.
+
+
+## Supported Rails Versions
+This document focuses on Rails 4 and 5. Vulnerabilities that were present in 
+earlier versions and fixed in Rails 4 are not included.
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+## Table of Contents
 
 - [Zen Rails Security Checklist](#zen-rails-security-checklist)
   - [Summary](#summary)
@@ -31,28 +50,9 @@
   - [References and Further Reading](#references-and-further-reading)
   - [License](#license)
 
+  Table of contents generated with [DocToc](https://github.com/thlorenz/doctoc)
+
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# Zen Rails Security Checklist
-
-
-## Summary
-This document provides a list of security measures to be implemented when 
-developing a Ruby on Rails application. It is designed to serve as a quick 
-reference and minimize vulnerabilities caused by developer forgetfulness. 
-
-This checklist is meant to be a community-driven resource. Your 
-[contributions](#contributing) are welcome! 
-
-**Disclaimer**: This document does not cover all possible security 
-vulnerabilities. The authors do not take any legal responsibility for the 
-accuracy or completeness of the information herein.
-
-
-## Supported Rails Versions
-This document focuses on Rails 4 and 5. Vulnerabilities that were present in 
-earlier versions and fixed in Rails 4 are not included.
-
 
 ## The Checklist
 
