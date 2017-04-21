@@ -26,7 +26,7 @@ earlier versions and fixed in Rails 4 are not included.
   - [Supported Rails Versions](#supported-rails-versions)
   - [The Checklist](#the-checklist)
       - [Injection](#injection)
-      - [Authentication (Devise)](#authentication-devise)
+      - [Authentication](#authentication)
       - [Sessions & Cookies](#sessions--cookies)
       - [Cross-Site Scripting (XSS)](#cross-site-scripting-xss)
           - [Handling User Input](#handling-user-input)
@@ -35,7 +35,7 @@ earlier versions and fixed in Rails 4 are not included.
       - [Authorization (Pundit)](#authorization-pundit)
       - [Files](#files)
           - [File Uploads](#file-uploads)
-          - [File Downloads](#output-escaping--sanitization)
+          - [File Downloads](#file-downloads)
       - [Cross-Site Request Forgery (CSRF)](#cross-site-request-forgery-csrf)
       - [Sensitive Data Exposure](#sensitive-data-exposure)
       - [Routing, Template Selection, and Redirection](#routing-template-selection-and-redirection)
@@ -73,19 +73,26 @@ Resources:
 - [Ruby on Rails Security Guide - SQL Injection](http://guides.rubyonrails.org/security.html#sql-injection)
 - [Rails SQL Injection Examples](https://rails-sqli.org/)
 
-#### Authentication (Devise)
-
+#### Authentication 
 Broken Authentication and Session Management are #2 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
-- [ ] Enforce a minimum password length of 8 characters or more. *Mitigates
+- [ ] Avoid rolling your own authentication unless you know **exactly** what you
+are doing. Consider using a gem such as
+[Devise](https://github.com/plataformatec/devise),
+[Authlogic](https://github.com/binarylogic/authlogic) or
+[Clearance](https://github.com/thoughtbot/clearance). *Mitigates dozens of
+potential vulnerabilities.*
+- [ ] Enforce a minimum password length of 8 characters or more.  *Mitigates
 brute-force attacks.*
+    - Devise: set `config.password_length = 8..128` in in
+    `config/initializers/devise.rb`. 
 - [ ] Consider validating passwords against:
     - Dictionary words. Since passwords have a minimum length requirement, the
-   dictionary need only include words meeting that requirement. 
-   - A list of commonly used passwords such as
-   [these](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
-   The [password_strength](https://github.com/fnando/password_strength) and
-   [StrongPassword](https://github.com/bdmac/strong_password) gems provide such
-   feature.
+    dictionary need only include words meeting that requirement. 
+    - A list of commonly used passwords such as
+    [these](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
+    The [password_strength](https://github.com/fnando/password_strength) and
+    [StrongPassword](https://github.com/bdmac/strong_password) gems provide such
+    feature.
     - A leaked password database such as [PasswordPing](https://www.passwordping.com/docs-passwords-api/).
     - Context-specific words, such as the name of the application, the
     username, and derivatives thereof.
@@ -93,63 +100,79 @@ brute-force attacks.*
 mixtures of different character types. Most applications use it. However, the
 latest [NIST Guidelines](https://pages.nist.gov/800-63-3/sp800-63b.html) advise
 against it. An alternative is to increase the minimum length requirement and
-encourage the usage of passphrases. Devise only validates password length. Gems
-such as
-[devise_security_extension](https://github.com/phatworx/devise_security_extension),
-[StrongPassword](https://github.com/bdmac/strong_password),
-[devise_zxcvbn](https://github.com/bitzesty/devise_zxcvbn), and
-[password_strength](https://github.com/fnando/password_strength) provide
-additional password validation capabilities, such as entropy calculation (based
-on password complexity). Validation may also be implemented with regex
- ([code sample](#password-validation-regex)). *Mitigate brute-force attacks.*
-- [ ] Lock the account after multiple failed login attempts. Use Devise's 
-[lockable module](https://github.com/plataformatec/devise/wiki/How-To:-Add-:lockable-to-Users).
-*Mitigates brute-force attacks.*
+encourage the usage of passphrases. *Mitigate brute-force attacks.*
+    - Devise: use a Devise-specific gem such as
+    [devise_security_extension](https://github.com/phatworx/devise_security_extension),
+    [devise_zxcvbn](https://github.com/bitzesty/devise_zxcvbn) or one of the 
+    following authentication-agnostic solutions.
+    - The [password_strength](https://github.com/fnando/password_strength) and
+    [StrongPassword](https://github.com/bdmac/strong_password) gems or a regex
+    validation ([code sample](#password-validation-regex)) should work with most
+    authentication setups. 
+- [ ] Lock the account after multiple failed login attempts. *Mitigates 
+brute-force attacks.*
+    - Devise: activate the [lockable
+    module](https://github.com/plataformatec/devise/wiki/How-To:-Add-:lockable-to-Users).
 - [ ] Require users to confirm their e-mail addresses on sign-up and when the 
-e-mail address is changed. Use Devise's 
-[confirmable module](https://github.com/plataformatec/devise/wiki/How-To:-Add-:confirmable-to-Users)
-and set `config.reconfirmable = true` in `config/initializers/devise.rb`. 
-*Mitigates the creation of bogus accounts with non-existing or third-party
-e-mails.*
+e-mail address is changed. *Mitigates the creation of bogus accounts with 
+non-existing or third-party e-mails.*
+    - Devise: use the [confirmable
+    module](https://github.com/plataformatec/devise/wiki/How-To:-Add-:confirmable-to-Users)
+    and set `config.reconfirmable = true` in `config/initializers/devise.rb`. 
 - [ ] Require users to input their old password on password change. *Mitigates
 unauthorized password changes on session hijacking, CSRF or when a user forgets 
 to log out and leaves the PC or mobile device unattended.*
+    - Devise: does that by default
 - [ ] Expire the session at log out and expire old sessions at every successful
-login. Devise does that by default. Also use Devise's [timeoutable
-module](http://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Timeoutable)
-to expire sessions after a period of inactivity (e.g., 30 minutes). *Mitigates
-CSRF, session hijacking and session fixation attacks by reducing their
-time-frame.*
-- [ ] Notify user via email on password change. Set
-`config.send_password_change_notification = true` in
-`config/initializers/devise.rb`.  *Does not prevent an attacker from changing
-the victim's password, but warns the victim so he can contact the system
-administrator to revoke the attacker's access.*
-- [ ] Use generic error messages such as "Invalid email or password" instead 
-of specifying which part (e-mail or password) is invalid. Devise does that by
- default. *Mitigates user enumeration and brute-force attacks.*
-- [ ] Ensure all non-public controllers/actions require authentication. Add
- `before_action :authenticate_user!` to `ApplicationController` and 
- `skip_before_action :authenticate_user!` to publicly accessible 
- controllers/actions. *Avoid unauthorized access due to developer 
- forgetfulness.*
-- [ ] Consider using the
-[devise_security_extension](https://github.com/phatworx/devise_security_extension)
-gem, which provides additional security for Devise.
+login. *Mitigates CSRF, session hijacking and session fixation attacks by 
+reducing their time-frame.*
+    - Devise: does that by default.
+- [ ] Expire sessions after a period of inactivity (e.g., 30 minutes).
+*Mitigates CSRF, session hijacking and session fixation attacks by reducing
+their time-frame.* 
+    - Devise: use the [timeoutable
+    module](http://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Timeoutable).
+- [ ] Notify user via email on password change. *Does not prevent an attacker
+from changing the victim's password, but warns the victim so he can contact the
+system administrator to revoke the attacker's access.*
+    - Devise: set `config.send_password_change_notification = true` in
+    `config/initializers/devise.rb`.
+<!--- TODO: Provide implementation details for the following item: use Devise 
+paranoid mode + captcha in the registerable module --->
+- [ ] Use generic error messages such as "Invalid email or password" instead of
+specifying which part (e-mail or password) is invalid. *Mitigates user
+enumeration and brute-force attacks.*
+- [ ] Ensure all non-public controllers/actions require authentication. *Avoid
+unauthorized access due to developer forgetfulness.*
+    - Devise: add `before_action :authenticate_user!` to 
+    `ApplicationController` and
+`skip_before_action :authenticate_user!` to publicly accessible
+controllers/actions. 
 - [ ] Consider using two-factor authentication (2FA) as provided by
-[Authy](https://www.authy.com/). See the
-[devise-two-factor](https://github.com/tinfoil/devise-two-factor) and
-[authy-devise](https://github.com/authy/authy-devise) gems. *Provides a highly
-effective extra layer of authentication security.*
-- [ ] Consider requiring authentication in `config/routes.rb` by putting 
-non-public
-resources within a `authenticate :user do` block (see the [Devise
-Wiki](https://github.com/plataformatec/devise/wiki/How-To:-Define-resource-actions-that-require-authentication-using-routes.rb)).
-Requiring authentication in both controllers and routes may not be DRY, but 
-such redundancy provides additional security (see [Defense in
-depth](https://en.wikipedia.org/wiki/Defense_in_depth_(computing))).
-- [ ] Consider restricting administrator access by IP. If the client's IP is 
-dynamic, restrict by IP block/ASN or by country via IP geolocation (country).
+[Authy](https://www.authy.com/). *Provides a highly effective extra layer of
+authentication security.*
+    - Devise: see
+    the [devise-two-factor](https://github.com/tinfoil/devise-two-factor) and
+    [authy-devise](https://github.com/authy/authy-devise) gems. 
+- [ ] Consider requiring authentication in `config/routes.rb`. Requiring
+authentication in both controllers and routes may not be DRY, but such
+redundancy provides additional security (see [Defense in
+depth](https://en.wikipedia.org/wiki/Defense_in_depth_(computing))). 
+    - Devise: Place non-public resources within a `authenticate :user do` block
+    (see the [Devise
+    Wiki](https://github.com/plataformatec/devise/wiki/How-To:-Define-resource-actions-that-require-authentication-using-routes.rb)).
+- [ ] Consider limiting the number of simultaneous sessions per account. *May
+ reduce application exposure on account compromise (e.g. leaked passwords).*
+    - Devise: use the
+    [devise_security_extension](https://github.com/phatworx/devise_security_extension)
+    gem.
+- [ ] Avoid implementing "security questions" such as "What is your mother's
+maiden name?" as their answers may be reused across multiple sites and easily
+found by means of [social
+engineering](https://en.wikipedia.org/wiki/Social_engineering_(security)). See
+[this article](https://www.wired.com/2016/09/time-kill-security-questions-answer-lies/).
+- [ ] Consider restricting administrator access by IP. If the client's IP is
+dynamic, restrict by IP block/ASN or by country via IP geolocation.
 
 #### Sessions & Cookies
 Broken Authentication and Session Management are #2 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
