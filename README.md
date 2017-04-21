@@ -525,7 +525,6 @@ else
 end
 ```
 
-
 ## Authors
 
 - **Bruno Facca** - [LinkedIn](https://www.linkedin.com/in/brunofacca/) - 
@@ -537,6 +536,12 @@ Contributions are welcome. If you would like to correct an error or add new
 items to the checklist, feel free to create an issue and/or a PR. If you are 
 interested in contributing regularly, drop me a line at the above e-mail to 
 become a collaborator.
+
+## TODO
+* Compare upload gems regarding their implementation of the [File
+ Uploads](#file-uploads) items of this checklist (build a table).
+* Compare authentication gems regarding their implementation of the
+ [Authentication](#authentication) items of this checklist (build a table).
 
 ## References and Further Reading
 - [Ruby on Rails Security Guide](http://guides.rubyonrails.org/security.html)
