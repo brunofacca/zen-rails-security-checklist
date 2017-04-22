@@ -133,11 +133,16 @@ from changing the victim's password, but warns the victim so he can contact the
 system administrator to revoke the attacker's access.*
     - Devise: set `config.send_password_change_notification = true` in
     `config/initializers/devise.rb`.
-<!--- TODO: Provide implementation details for the following item: use Devise 
-paranoid mode + captcha in the registerable module --->
 - [ ] Use generic error messages such as "Invalid email or password" instead of
-specifying which part (e-mail or password) is invalid. *Mitigates user
-enumeration and brute-force attacks.*
+specifying which part (e-mail or password) is invalid. *Mitigates [user
+enumeration](https://www.owasp.org/index.php/Testing_for_user_enumeration_(OWASP-AT-002))
+and brute-force attacks.*
+    - Devise: setting `config.paranoid = true` in
+    `config/initializers/devise.rb` will protect the `confirmable`,
+    `recoverable` and `unlockable` modules against user enumeration. To protect
+    the `registerable` module, add a captcha to the registration page (see
+    [instructions in the Devise
+    Wiki](https://github.com/plataformatec/devise/wiki/How-To:-Use-Recaptcha-with-Devise)).
 - [ ] Ensure all non-public controllers/actions require authentication. *Avoid
 unauthorized access due to developer forgetfulness.*
     - Devise: add `before_action :authenticate_user!` to 
