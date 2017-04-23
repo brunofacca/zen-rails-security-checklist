@@ -290,9 +290,14 @@ on your server. If possible, use an image/video processing service such as
 [Cloudinary](http://cloudinary.com/features#manipulation), or
 [imgix](https://www.imgix.com/solutions). *Mitigates multiple image/video 
 processing related vulnerabilities such as [these](https://imagetragick.com).*
-- [ ] While using [paperclip](https://github.com/thoughtbot/paperclip) gem with [imagemagick](https://www.imagemagick.org) for file uploads, make sure:
-- imagemagick [policies](https://www.imagemagick.org/source/policy.xml) are suited for your environment to avoid exploits like [pixel flood attack]( https://hackerone.com/reports/390)
-- content spoofing is handled manually since it fails in scenarios like [#2426](https://github.com/thoughtbot/paperclip/issues/2426)
+- [ ] If using [paperclip](https://github.com/thoughtbot/paperclip) gem with
+[imagemagick](https://www.imagemagick.org) for file upload and processing, make
+sure:
+    - Imagemagick [policies](https://www.imagemagick.org/source/policy.xml) are
+suited for your environment to avoid exploits like [pixel flood attack](
+https://hackerone.com/reports/390).
+    - Content spoofing is handled manually since it fails in scenarios like
+[#2426](https://github.com/thoughtbot/paperclip/issues/2426).
 - [ ] Process uploaded files asynchronously. If not possible, implement
 per-client rate limiting. *Mitigates DoS Attacks that involve overloading the
 server CPU by flooding it with uploads that require processing.*  
