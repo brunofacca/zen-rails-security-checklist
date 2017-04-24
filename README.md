@@ -12,7 +12,6 @@ This checklist is meant to be a community-driven resource. Your
 vulnerabilities. The authors do not take any legal responsibility for the 
 accuracy or completeness of the information herein.
 
-
 ## Supported Rails Versions
 This document focuses on Rails 4 and 5. Vulnerabilities that were present in 
 earlier versions and fixed in Rails 4 are not included.
@@ -29,12 +28,14 @@ earlier versions and fixed in Rails 4 are not included.
         - [Handling User Input](#handling-user-input)
         - [Output Escaping & Sanitization](#output-escaping--sanitization)
     - [HTTP & TLS](#http--tls)
+        - [Security-related headers](#security-related-headers)
     - [Authorization (Pundit)](#authorization-pundit)
     - [Files](#files)
         - [File Uploads](#file-uploads)
         - [File Downloads](#file-downloads)
     - [Cross-Site Request Forgery (CSRF)](#cross-site-request-forgery-csrf)
     - [Sensitive Data Exposure](#sensitive-data-exposure)
+        - [Credentials & Secrets](#credentials--secrets)
     - [Routing, Template Selection, and Redirection](#routing-template-selection-and-redirection)
     - [Third-party Software](#third-party-software)
     - [Security Tools](#security-tools)
@@ -195,6 +196,7 @@ Resources:
 
 #### Cross-Site Scripting (XSS) 
 XSS is #3 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
+
 ###### Handling User Input
 - [ ] Always validate user input that may eventually be displayed to other
 users. Attempting to blacklist characters, strings or sanitize input tends to be
@@ -215,6 +217,7 @@ attacks that involve slipping JS code after line breaks, such as
 `me@example.com\n<script>dangerous_stuff();</script>`.* 
 - [ ] Do not trust validations implemented at the client (frontend) as most 
 implementations can be bypassed. Always (re)validate at the server.
+
 ###### Output Escaping & Sanitization
 - [ ] Escape all HTML output. Rails does that by default, but calling
 `html_safe` or `raw` at the view suppresses escaping. Look for calls to these
@@ -251,6 +254,7 @@ and cipher suites, preferably with Ephemeral Diffie-Hellman support.
 [rack-attack](https://github.com/kickstarter/rack-attack) and
 [rack-throttle](https://github.com/dryruby/rack-throttle) gems. *Mitigates web
 scraping, HTTP floods, and other attacks.*
+
 ###### Security-related headers
 - [ ] Consider using the [Secure Headers
 gem](https://github.com/twitter/secureheaders). *Mitigates several attacks.*
@@ -277,6 +281,7 @@ Resources:
 - [Pundit: Scopes](https://github.com/elabs/pundit#scopes)
 
 #### Files
+
 ###### File Uploads
 - [ ] Avoid using user controlled filenames. If possible, assign "random" 
 names to uploaded files when storing them in the OS. If not possible, 
@@ -324,6 +329,7 @@ the target path, estimated unzip size and media types of compressed files
 **before** unzipping. *Mitigates DoS attacks such as zip bombs, zipping 
 malicious files in an attempt to bypass validations, and overwriting of system 
 files such as `/etc/passwd`.*  
+
 ###### File Downloads
 - [ ] Do not allow downloading of user-submitted filenames and paths. If not
 possible, use a whitelist of permitted filenames and paths. *Mitigates the
@@ -347,7 +353,6 @@ single form and action/method. Enable it by setting
 Resources:
 - [Ruby on Rails Security Guide - CSRF](http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)
 - [Big Binary Blog - Each form gets its own CSRF token in Rails 5](http://blog.bigbinary.com/2016/01/11/per-form-csrf-token-in-rails-5.html)
-
 
 #### Sensitive Data Exposure
 - [ ] If possible, avoid storing sensitive data such as credit cards, tax IDs
@@ -382,6 +387,7 @@ other information that should only be accessible to developers.*
 environment. Place them within a `group :development, :test do` block 
 in the `Gemfile`. *Prevents leakage of exceptions and even **REPL access** 
 if using better_errors + web-console.*
+
 ###### Credentials & Secrets
 - [ ] Do not commit sensitive data such as `secret_key_base`, DB, and API
 credentials to git repositories. Avoid storing credentials in the source code,
@@ -425,7 +431,6 @@ servers.
 a service like [Snyk](https://snyk.io), [Gemnasium](https://gemnasium.com/) 
 (both free for open-source development) or [Appcanary](https://appcanary.com/).
 
-
 #### Security Tools
 - [ ] Run [Brakeman](http://brakemanscanner.org/) before each deploy. 
 If using an automated code review tool like 
@@ -437,7 +442,6 @@ engine](https://docs.codeclimate.com/v1.0/docs/brakeman).
 [NAXSI](https://github.com/nbs-system/naxsi) for Nginx, 
 [ModSecurity](https://github.com/SpiderLabs/ModSecurity) for Apache and Nginx. 
 *Mitigates XSS, SQL Injection, DoS, and many other attacks.*
-
 
 #### Others
 - [ ] Use strong parameters in the controllers. This is the default behavior 
@@ -451,8 +455,8 @@ integration. Other options are the
 [negative-captcha](https://github.com/subwindow/negative-captcha) gems. 
 *Mitigates automated SPAM (spambots).*
 
-
 ## Details and Code Samples
+
 #### Password validation regex
 We may implement password strength validation in Devise by adding the 
 following code to the `User` model.
