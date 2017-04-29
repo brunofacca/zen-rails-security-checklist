@@ -63,7 +63,7 @@ variables or the [ActiveRecord::Sanitization
 methods](http://api.rubyonrails.org/classes/ActiveRecord/Sanitization/ClassMethods.html#method-i-sanitize_conditions)
 to sanitize user input used in DB queries. *Mitigates SQL injection attacks.*
 - [ ] Don't pass user inputted strings to methods capable of evaluating 
-code or running O.S. commands such as `eval`, `system`, `syscall`, `%x()`, and 
+code or running O.S. commands such as `eval`, `system`, `syscall`, `%x()`, `open`, `popen<n>`, `File.read`, `File.write`, and 
 `exec`. *Mitigates command injection attacks.*
 
 Resources:
@@ -250,6 +250,7 @@ Lab](https://www.ssllabs.com/ssltest/) to check the grade of your TLS
 certificate. Be sure to use the strongest (yet widely compatible) protocols
 and cipher suites, preferably with Ephemeral Diffie-Hellman support.
 *Mitigates multiple SSL/TLS-related attacks such as BEAST and POODLE.*
+The  [Mozilla SSL Configuration Generator](https://mozilla.github.io/server-side-tls/ssl-config-generator/) can give you some suggestions.
 - [ ] Consider rate-limiting incoming HTTP requests, as implemented by the
 [rack-attack](https://github.com/kickstarter/rack-attack) and
 [rack-throttle](https://github.com/dryruby/rack-throttle) gems. *Mitigates web
