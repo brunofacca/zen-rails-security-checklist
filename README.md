@@ -248,9 +248,10 @@ Resources:
 - [ ] Use the [SSL Server Test tool from Qualys SSL
 Lab](https://www.ssllabs.com/ssltest/) to check the grade of your TLS
 certificate. Be sure to use the strongest (yet widely compatible) protocols
-and cipher suites, preferably with Ephemeral Diffie-Hellman support.
-*Mitigates multiple SSL/TLS-related attacks such as BEAST and POODLE.*
-The  [Mozilla SSL Configuration Generator](https://mozilla.github.io/server-side-tls/ssl-config-generator/) can give you some suggestions.
+and cipher suites, preferably with Ephemeral Diffie-Hellman support. The  
+[Mozilla SSL Configuration Generator](https://mozilla.github.io/server-side-tls/ssl-config-generator/) 
+can give you some suggestions. *Mitigates multiple SSL/TLS-related attacks 
+such as BEAST and POODLE.*
 - [ ] Consider rate-limiting incoming HTTP requests, as implemented by the
 [rack-attack](https://github.com/kickstarter/rack-attack) and
 [rack-throttle](https://github.com/dryruby/rack-throttle) gems. *Mitigates web
