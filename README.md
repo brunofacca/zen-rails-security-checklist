@@ -1,9 +1,18 @@
 # Zen Rails Security Checklist
 
 ## Summary
-This document provides a list of security measures to be implemented when 
+This document provides a not necessarily comprehensive list of security measures to be implemented when 
 developing a Ruby on Rails application. It is designed to serve as a quick 
-reference and minimize vulnerabilities caused by developer forgetfulness. 
+reference and minimize vulnerabilities caused by developer forgetfulness. It does not 
+replace developer training on secure coding principles and how they can be applied.
+
+Please apply only hints you realy understand. If you do not understand a topic named in this
+document, then please follow the provided links to further explanations or try to find other resources covering
+the topic for which you need more advanced training. Do not fall into cargo cult programming.
+
+Please keep in mind, security is a moving target. New vulnerability and attack vectors
+are discovered every day. So try to keep up to date, for instance be subscribing to security 
+related mailings lists related to the software and libraries you are using.
 
 This checklist is meant to be a community-driven resource. Your 
 [contributions](#contributing) are welcome! 
