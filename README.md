@@ -457,6 +457,14 @@ engine](https://docs.codeclimate.com/v1.0/docs/brakeman).
 [ModSecurity](https://github.com/SpiderLabs/ModSecurity) for Apache and Nginx. 
 *Mitigates XSS, SQL Injection, DoS, and many other attacks.*
 
+#### Testing
+- [ ] Include security tests in your test suite. Look at OWASP's
+[RailsGoat](https://github.com/OWASP/railsgoat) application for examples of
+[security-related Capybara
+specs](https://github.com/OWASP/railsgoat/tree/master/spec/vulnerabilities).
+Raises additional security awareness and mitigates security-related regressions
+*
+
 #### Others
 - [ ] Use strong parameters in the controllers. This is the default behavior 
 as of Rails 4. *Mitigates mass assignment attacks such as overwriting the 
