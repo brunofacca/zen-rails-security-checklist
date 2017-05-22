@@ -467,6 +467,10 @@ engine](https://docs.codeclimate.com/v1.0/docs/brakeman).
 specs](https://github.com/OWASP/railsgoat/tree/master/spec/vulnerabilities).
 *Raises additional security awareness and mitigates security-related 
 regressions.*
+- [ ] Create security tests in pairs: one for the access denied scenario and 
+another for the access granted scenario.
+- [ ] When using TDD, consider implementing authentication in the early stages
+ of development, as it tends to break multiple preexisting tests.
 
 #### Others
 - [ ] Use strong parameters in the controllers. This is the default behavior 
@@ -572,11 +576,17 @@ dot info
 ## Contributing
 
 Contributions are welcome. If you would like to correct an error or add new 
-items to the checklist, feel free to create an issue and/or a PR. If you are 
-interested in contributing regularly, drop me a line at the above e-mail to 
-become a collaborator.
+items to the checklist, feel free to create an issue followed by a PR. See the
+ [TODO](#TODO) section for contribution suggestions.  
+
+If you are interested in contributing regularly, drop me a line at the above
+e-mail to become a collaborator.
 
 ## TODO
+* Add sample tests (RSpec and/or Minitest) to detect the presence of
+vulnerabilities. See OWASP's [RailsGoat security-related Capybara 
+specs](https://github.com/OWASP/railsgoat/tree/master/spec/vulnerabilities) for
+inspiration.
 * Compare upload gems regarding their implementation of the [File
  Uploads](#file-uploads) items of this checklist (build a table).
 * Compare authentication gems regarding their implementation of the
