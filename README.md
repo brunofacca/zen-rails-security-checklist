@@ -465,8 +465,8 @@ engine](https://docs.codeclimate.com/v1.0/docs/brakeman).
 [RailsGoat](https://github.com/OWASP/railsgoat) application for examples of
 [security-related Capybara
 specs](https://github.com/OWASP/railsgoat/tree/master/spec/vulnerabilities).
-Raises additional security awareness and mitigates security-related regressions
-*
+*Raises additional security awareness and mitigates security-related 
+regressions.*
 
 #### Others
 - [ ] Use strong parameters in the controllers. This is the default behavior 
