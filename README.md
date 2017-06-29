@@ -499,12 +499,10 @@ def password_strength
   # Regex matches at least one lower case letter, one uppercase, and one digit
   complexity_regex = /\A(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/
   # When a user is updated but not its password, the password param is nil
-  if password.present? &&
-    password.length < minimum_length &&
-    !password.match(complexity_regex)
+    if password.present? && password.length < minimum_length || !password.match(complexity_regex)
     errors.add :password, 'must be 8 or more characters long, including 
-                           at least one lowercase letter, one uppercase
-                           letter, and one digit.'
+                             at least one lowercase letter, one uppercase
+                             letter, and one digit.'
   end
 end
 ```
