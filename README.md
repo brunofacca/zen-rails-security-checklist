@@ -188,8 +188,15 @@ maiden name?" as their answers may be reused across multiple sites and easily
 found by means of [social
 engineering](https://en.wikipedia.org/wiki/Social_engineering_(security)). See
 [this article](https://www.wired.com/2016/09/time-kill-security-questions-answer-lies/).
+- [ ] If using role-based access control (RBAC), do not include the role 
+attribute in the strong parameters of the controller(s) used for user 
+registration and profile editing. *Prevent malicious users from assigning admin 
+role to themselves.* 
+    - Devise: Do not pass the role parameter key to 
+    `devise_parameter_sanitizer.permit`.
 - [ ] Consider restricting administrator access by IP. If the client's IP is
 dynamic, restrict by IP block/ASN or by country via IP geolocation.
+
 
 #### Sessions & Cookies
 Broken Authentication and Session Management are #2 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
