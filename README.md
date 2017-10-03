@@ -85,7 +85,7 @@ Resources:
 - [Ruby on Rails Security Guide - SQL Injection](http://guides.rubyonrails.org/security.html#sql-injection)
 - [Rails SQL Injection Examples](https://rails-sqli.org/)
 
-#### Authentication 
+#### Authentication
 Broken Authentication and Session Management are #2 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
 - [ ] Avoid rolling your own authentication unless you know **exactly** what you
 are doing. Consider using a gem such as
@@ -216,7 +216,7 @@ attackers from using the victim's browser JavaScript to steal cookies after a
 Resources:
 - [Ruby on Rails Security Guide - Sessions](http://guides.rubyonrails.org/security.html#sessions)
 
-#### Cross-Site Scripting (XSS) 
+#### Cross-Site Scripting (XSS)
 XSS is #3 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
 
 ###### Handling User Input
@@ -276,8 +276,9 @@ can give you some suggestions. *Mitigates multiple SSL/TLS-related attacks
 such as BEAST and POODLE.*
 - [ ] Consider rate-limiting incoming HTTP requests, as implemented by the
 [rack-attack](https://github.com/kickstarter/rack-attack) and
-[rack-throttle](https://github.com/dryruby/rack-throttle) gems. *Mitigates web
-scraping, HTTP floods, and other attacks.*
+[rack-throttle](https://github.com/dryruby/rack-throttle) gems. See [sample
+code](#throttling-requests). *Mitigates web scraping, HTTP floods, and other
+attacks.*
 
 ###### Security-related headers
 - [ ] Consider using the [Secure Headers
@@ -580,6 +581,20 @@ else
 end
 ```
 
+#### Throttling Requests
+
+On some pages like the login page, you'll want to throttle your users to a few
+requests per minute. This prevents bots from trying thousands of passwords
+quickly.
+
+Rack Attack is a Rack middleware that provides throttling among other features.
+
+```
+Rack::Attack.throttle('logins/email', :limit => 6, :period => 60.seconds) do |req|
+  req.params['email'] if req.path == '/login' && req.post?
+end
+```
+
 ## Authors
 
 - **Bruno Facca** - [Twitter](https://twitter.com/bruno_facca) - 
@@ -612,6 +627,7 @@ inspiration.
 - [SitePoint: Common Rails Security Pitfalls and Their Solutions](https://www.sitepoint.com/common-rails-security-pitfalls-and-their-solutions/)
 - [Rails Security Audit by Hardhat](https://github.com/hardhatdigital/rails-security-audit)
 - [Rails Security Checklist by Eliot Sykes](https://github.com/eliotsykes/rails-security-checklist)
+- [Ruby on Rails Security 17-Item Checklist](https://www.engineyard.com/blog/ruby-on-rails-security-checklist)
 
 ## License
 
