@@ -93,7 +93,7 @@ are doing. Consider using a gem such as
 [Authlogic](https://github.com/binarylogic/authlogic) or
 [Clearance](https://github.com/thoughtbot/clearance). *Mitigates dozens of
 potential vulnerabilities.*
-- [ ] Enforce a minimum password length of 8 characters or more.  *Mitigates
+- [ ] Enforce a minimum password length of 8 characters or more. *Mitigates
 brute-force attacks.*
     - Devise: set `config.password_length = 8..128` in in
     `config/initializers/devise.rb`. 
@@ -229,10 +229,14 @@ whitelisting approach is usually safer. *Mitigates multiple XSS attacks.*
 [loofah-activerecord](https://github.com/flavorjones/loofah-activerecord) gem
  to scrub your model attribute values. *Mitigates multiple XSS attacks*.
 - [ ] If you must create links from user inputted URLs, be sure to validate
-them. If using regex, ensure that the string **begins** with the expected
-protocol(s), as in `\Ahttps?`. *Mitigates XSS attacks such as entering 
-`javascript:dangerous_stuff()//http://www.some-legit-url.com` as a website URL 
-that is displayed as a link to other users (e.g., in a user profile page).*
+them. In particular, it should be possible to limit URL schemes to http/https
+in nearly all cases. The URL passed to `link_to` (the second argument) will be
+HTML escaped. However, `link_to` allows any scheme for the URL. If using regex,
+ensure that the string **begins** with the expected protocol(s), as in
+`\Ahttps?`. *Mitigates XSS attacks such as entering
+`javascript:dangerous_stuff()//http://www.some-legit-url.com` as a website URL
+or a dangerous `data:` payload that is displayed to other users (e.g., in a
+user profile page).*
 - [ ] When using regex for input validation, use `\A` and `\z` to match string 
 beginning and end. Do **not** use `^` and `$` as anchors. *Mitigates XSS 
 attacks that involve slipping JS code after line breaks, such as 
@@ -247,20 +251,44 @@ methods in the entire project, check if you are generating HTML from
 user-inputted strings and if those strings are effectively validated. Note that
 there are [dozens of ways to evade
 validation](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet). If
-possible, avoid calling `html_safe` and `raw` altogether. For custom scrubbing,
-see
+possible, avoid calling `html_safe` and `raw` altogether. Most templating
+libraries also provide a way of skipping escaping. ERB uses the double `==`:
+`<%== params[:query] %>`. For custom scrubbing, see
 [ActionView::Helpers::SanitizeHelper](http://api.rubyonrails.org/classes/ActionView/Helpers/SanitizeHelper.html)
-Mitigates XSS attacks.*
+*Mitigates XSS attacks.*
+- [ ] Always enclose attribute values with double quotes. Even without
+`html_safe`, it is possible to introduce cross-site scripting into templates
+with unquoted attributes. In the following code
+`<p class=<%= params[:style] %>...</p>`, an attacker can insert a space into
+the style parameter and suddenly the payload is outside the attribute value and
+they can insert their own payload. And when a victim mouses over the paragraph,
+the XSS payload will fire. *Mitigates XSS attacks.*
+- [ ] Rendering JSON inside of HTML templates is tricky. You can't just HTML
+escape JSON, especially when inserting it into a script context, because
+double-quotes will be escaped and break the code. But it isn't safe to not
+escape it, because browsers will treat a `</script>` tag as HTML no matter
+where it is. The Rails documentation recommends always using `json_encode`
+just in case `to_json` is overridden or the value is not valid JSON.
+*Mitigates XSS attacks.*
+- [ ] Be careful when using `render inline: ...`. The value passed in will be
+treated like an ERB template by default. Take a look at this code:
+`render inline: "Thanks #{@user.name}!"`. Assuming users can set their own
+name, an attacker might set their name to `<%= rm -rf / %>` which will execute
+`rm -rf /` on the server! This is called Server Side Template Injection and it
+allows arbitrary code execution (RCE) on the server. If you must use an inline
+template treat all input the same as you would in a regular ERB template:
+`render inline: "Thanks <%= @user.name %>"`. *Mitigates XSS attacks.*
 - [ ] Avoid sending user inputted strings in e-mails to other users. Attackers
 may enter a malicious URL in a free text field that is not intended to contain
 URLs and does not provide URL validation. Most e-mail clients display URLs as
-links.  *Mitigates XSS, phishing, malware infection and other attacks.*
+links. *Mitigates XSS, phishing, malware infection and other attacks.*
 
 Resources:
 - [Ruby on Rails Security Guide - XSS](http://guides.rubyonrails.org/security.html#cross-site-scripting-xss)
 - [OWASP XSS Filter Evasion Cheat Sheet](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet)
 - [OWASP Ruby on Rails Cheatsheet - Cross-site Scripting (XSS)](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet#Cross-site_Scripting_.28XSS.29)
 - [Plataformatec Blog - The new HTML sanitizer in Rails 4.2](http://blog.plataformatec.com.br/2014/07/the-new-html-sanitizer-in-rails-4-2)
+- [Brakeman Pro - Cross-Site Scripting in Rails](https://brakemanpro.com/2017/09/08/cross-site-scripting-in-rails)
 
 #### HTTP & TLS
 - [ ] Force HTTPS over TLS (formerly known as SSL). Set 
