@@ -430,7 +430,7 @@ better-looking URLs. *Mitigates forced browsing attacks and exposure of metrics
 about your business, such as the number of registered users, number of 
 products on stock, or number of receipts/purchases.*
 - [ ] If using slugs instead of numerical IDs for URLs, consider returning a
-`404 Not Found` status code insted of `403 Forbidden` for authorization errors.
+`404 Not Found` status code instead of `403 Forbidden` for authorization errors.
 Prevents leakage of attribute values used to generate the slugs. For instance,
 visiting `www.myapp.com/users/john-doe` and getting a `403`  return status
 indicates the application has a user named John Doe.*
