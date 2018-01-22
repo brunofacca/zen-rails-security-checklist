@@ -267,7 +267,7 @@ the XSS payload will fire. *Mitigates XSS attacks.*
 escape JSON, especially when inserting it into a script context, because
 double-quotes will be escaped and break the code. But it isn't safe to not
 escape it, because browsers will treat a `</script>` tag as HTML no matter
-where it is. The Rails documentation recommends always using `json_encode`
+where it is. The Rails documentation recommends always using `json_escape`
 just in case `to_json` is overridden or the value is not valid JSON.
 *Mitigates XSS attacks.*
 - [ ] Be careful when using `render inline: ...`. The value passed in will be
