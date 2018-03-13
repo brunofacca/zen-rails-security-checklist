@@ -95,7 +95,7 @@ are doing. Consider using a gem such as
 potential vulnerabilities.*
 - [ ] Enforce a minimum password length of 8 characters or more. *Mitigates
 brute-force attacks.*
-    - Devise: set `config.password_length = 8..128` in in
+    - Devise: set `config.password_length = 8..128` in
     `config/initializers/devise.rb`. 
 - [ ] Consider validating passwords against:
     - Dictionary words. Since passwords have a minimum length requirement, the
