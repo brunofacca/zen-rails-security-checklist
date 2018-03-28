@@ -41,6 +41,7 @@ earlier versions and fixed in Rails 4 are not included.
         - [Output Escaping & Sanitization](#output-escaping--sanitization)
     - [HTTP & TLS](#http--tls)
         - [Security-related headers](#security-related-headers)
+    - [Memcached Security](#memcached-security)
     - [Authorization (Pundit)](#authorization-pundit)
     - [Files](#files)
         - [File Uploads](#file-uploads)
@@ -314,6 +315,27 @@ gem](https://github.com/twitter/secureheaders). *Mitigates several attacks.*
 - [ ] Consider obfuscating the web server banner string. In other words, hide
  your web server name and version. *Mitigates HTTP fingerprinting, making it 
  harder for attackers to determine which exploits may work on your web server.* 
+
+#### Memcached Security
+
+- [ ] Use a firewall. Memcached needs to be accessible from your other servers
+but there's no reason to expose it to the internet. In short, only your other
+production servers have access to your production memcached servers. This alone
+would prevent your server from being used in an attack. Memcached out of the box
+doesn't use authentication so anyone who can connect to your server will be able
+to read your data.
+- [ ] Listen on a private interface. If you're running one server for your Rails
+application and memcached, you should listen on `127.0.0.1`. For availability
+reasons, you shouldn't have 1 server in production anyway. For staging and test
+environments, follow this rule. For production setups where you have multiple
+Rails servers that need to connect to memcached, use the private IP of the
+server. This is something like `192.168.0.1`, `172.16.0.1`, or `10.0.0.1`. When
+you start memcached, use `--listen 127.0.0.1` or `--listen 192.168.0.1`.
+- [ ] Disable UDP. It is enabled by default. To disable UDP, use `-U 0` when
+starting memcached.
+
+Resources:
+- [Memcached Security aka Don't Attack GitHub](https://www.engineyard.com/blog/memcached-security-aka-dont-attack-github-)
 
 #### Authorization (Pundit)
 - [ ] Implement authorization at the back end. Hiding links/controls in the UI
