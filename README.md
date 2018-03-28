@@ -58,6 +58,7 @@ earlier versions and fixed in Rails 4 are not included.
     - [Pundit: ensure all actions are authorized](#pundit-ensure-all-actions-are-authorized)
     - [Pundit: only display appropriate records in select boxes](#pundit-only-display-appropriate-records-in-select-boxes)
     - [Convert filter_parameters into a whitelist](#convert-filter_parameters-into-a-whitelist)
+    - [Throttling Requests](#throttling-requests)
 - [Authors](#authors)
 - [Contributing](#contributing)
 - [TODO](#todo)
@@ -625,9 +626,8 @@ end
 
 ## Authors
 
-- **Bruno Facca** - [Twitter](https://twitter.com/bruno_facca) - 
-[LinkedIn](https://www.linkedin.com/in/brunofacca/) - Email: bruno at facca 
-dot info
+- **Bruno Facca** - [LinkedIn](https://www.linkedin.com/in/brunofacca/) -
+Email: bruno at facca  dot info
 
 ## Contributing
 
