@@ -48,7 +48,7 @@ earlier versions and fixed in Rails 4 are not included.
         - [File Downloads](#file-downloads)
     - [Cross-Site Request Forgery (CSRF)](#cross-site-request-forgery-csrf)
     - [Sensitive Data Exposure](#sensitive-data-exposure)
-        - [Credentials & Secrets](#credentials--secrets)
+        - [Credentials](#credentials)
     - [Routing, Template Selection, and Redirection](#routing-template-selection-and-redirection)
     - [Third-party Software](#third-party-software)
     - [Security Tools](#security-tools)
@@ -468,18 +468,30 @@ environment. Place them within a `group :development, :test do` block
 in the `Gemfile`. *Prevents leakage of exceptions and even **REPL access** 
 if using better_errors + web-console.*
 
-###### Credentials & Secrets
-- [ ] Do not commit sensitive data such as `secret_key_base`, DB, and API
-credentials to git repositories. Avoid storing credentials in the source code,
-use environment variables instead. If not possible, ensure all sensitive files
-such as `/config/database.yml`, `config/secrets.yml` (and possibly
-`/db/seeds.rb` if it is used to create seed users for production) are included in
-`.gitignore`. *Mitigates credential leaks/theft.*
-- [ ] Use different secrets in the development and production environments. 
-*Mitigates credential leaks/theft.*
-- [ ] Use a `secret_key_base` with over 30 random characters. The `rake secret`
- command generates such strong keys. *Strengthens cookie encryption, 
- mitigating multiple cookie/session related attacks.* 
+###### Credentials
+- [ ] The encryption key, located on `config/master.key` is created when you run
+`rails new`. It's also added to `.gitignore` so it doesn't get committed to your
+repository. *Mitigates credential leaks/theft.*
+- [ ] Don't edit the `config/credentials.yml.enc` file directly. To add
+credentials, run `bin/rails credentials:edit`. Use a flat format which means you
+don't have to put development or production anymore. *Mitigates credential
+leaks/theft.*
+- [ ] If you want to generate a new secret key base run, `bin/rails secret` and
+add that to your credentials by running `bin/rails credentials:edit`.
+- [ ] Upload `master.key` securely. You can scp or sftp the file. Upload the key
+to a shared directory. Shared here means shared between releases, not a shared
+filesystem. On each deploy, you symlink `config/master.key` to
+`/path/to/shared/config/master.key`.
+- [ ] If you need to give a developer a copy of the key, never send it via email
+(unless you're using encrypted emails which most of us don't!) You can use a
+password manager because they use encryption.
+- [ ] Put the key on the `RAILS_MASTER_KEY` environment variable. In some cases
+where you can't upload a file, this is the only option. Even though this is
+convenient, make sure you know the risks of using environment variables. The
+risks can be mitigated, but if you can upload master.key then use that option.
+
+Resources:
+ - [Rails Encrypted Credentials on Rails 5.2](https://www.engineyard.com/blog/rails-encrypted-credentials-on-rails-5.2)
 
 #### Routing, Template Selection, and Redirection
 - [ ] Don't perform URL redirection based on user inputted strings. In other 
