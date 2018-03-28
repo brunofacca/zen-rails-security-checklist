@@ -39,6 +39,7 @@ earlier versions and fixed in Rails 4 are not included.
     - [Cross-Site Scripting (XSS)](#cross-site-scripting-xss)
         - [Handling User Input](#handling-user-input)
         - [Output Escaping & Sanitization](#output-escaping--sanitization)
+        - [XSS protection in HAML templates](#xss-protection-in-haml-templates)
     - [HTTP & TLS](#http--tls)
         - [Security-related headers](#security-related-headers)
     - [Memcached Security](#memcached-security)
@@ -59,6 +60,7 @@ earlier versions and fixed in Rails 4 are not included.
     - [Pundit: ensure all actions are authorized](#pundit-ensure-all-actions-are-authorized)
     - [Pundit: only display appropriate records in select boxes](#pundit-only-display-appropriate-records-in-select-boxes)
     - [Convert filter_parameters into a whitelist](#convert-filter_parameters-into-a-whitelist)
+    - [HAML: XSS protection](#haml-xss-protection)
 - [Authors](#authors)
 - [Contributing](#contributing)
 - [TODO](#todo)
@@ -284,12 +286,19 @@ may enter a malicious URL in a free text field that is not intended to contain
 URLs and does not provide URL validation. Most e-mail clients display URLs as
 links. *Mitigates XSS, phishing, malware infection and other attacks.*
 
+###### XSS protection in HAML templates
+
+- [ ] Be careful when using `!=` in Haml and it should be made sure that no
+user data is rendered unescaped. The `!=` notation in Haml works the way
+`<%= raw(…) %>` works in ERB. See [(example code)](#haml-xss-protection).
+
 Resources:
 - [Ruby on Rails Security Guide - XSS](http://guides.rubyonrails.org/security.html#cross-site-scripting-xss)
 - [OWASP XSS Filter Evasion Cheat Sheet](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet)
 - [OWASP Ruby on Rails Cheatsheet - Cross-site Scripting (XSS)](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet#Cross-site_Scripting_.28XSS.29)
 - [Plataformatec Blog - The new HTML sanitizer in Rails 4.2](http://blog.plataformatec.com.br/2014/07/the-new-html-sanitizer-in-rails-4-2)
 - [Brakeman Pro - Cross-Site Scripting in Rails](https://brakemanpro.com/2017/09/08/cross-site-scripting-in-rails)
+- [Preventing security issues in Rails](https://www.railscarma.com/blog/technical-articles/preventing-security-issues-rails/)
 
 #### HTTP & TLS
 - [ ] Force HTTPS over TLS (formerly known as SSL). Set 
@@ -655,6 +664,18 @@ Rack Attack is a Rack middleware that provides throttling among other features.
 Rack::Attack.throttle('logins/email', :limit => 6, :period => 60.seconds) do |req|
   req.params['email'] if req.path == '/login' && req.post?
 end
+```
+
+#### HAML: XSS protection
+By default,
+```ruby
+="<em>emphasized<em>"
+!= "<em>emphasized<em>"
+```
+compiles to:
+```ruby
+&lt;em&gt;emphasized&lt;/em&gt;
+<em>emphasized<em>
 ```
 
 ## Authors
