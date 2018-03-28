@@ -39,15 +39,17 @@ earlier versions and fixed in Rails 4 are not included.
     - [Cross-Site Scripting (XSS)](#cross-site-scripting-xss)
         - [Handling User Input](#handling-user-input)
         - [Output Escaping & Sanitization](#output-escaping--sanitization)
+        - [XSS protection in HAML templates](#xss-protection-in-haml-templates)
     - [HTTP & TLS](#http--tls)
         - [Security-related headers](#security-related-headers)
+    - [Memcached Security](#memcached-security)
     - [Authorization (Pundit)](#authorization-pundit)
     - [Files](#files)
         - [File Uploads](#file-uploads)
         - [File Downloads](#file-downloads)
     - [Cross-Site Request Forgery (CSRF)](#cross-site-request-forgery-csrf)
     - [Sensitive Data Exposure](#sensitive-data-exposure)
-        - [Credentials & Secrets](#credentials--secrets)
+        - [Credentials](#credentials)
     - [Routing, Template Selection, and Redirection](#routing-template-selection-and-redirection)
     - [Third-party Software](#third-party-software)
     - [Security Tools](#security-tools)
@@ -59,6 +61,7 @@ earlier versions and fixed in Rails 4 are not included.
     - [Pundit: only display appropriate records in select boxes](#pundit-only-display-appropriate-records-in-select-boxes)
     - [Convert filter_parameters into a whitelist](#convert-filter_parameters-into-a-whitelist)
     - [Throttling Requests](#throttling-requests)
+    - [HAML: XSS protection](#haml-xss-protection)
 - [Authors](#authors)
 - [Contributing](#contributing)
 - [TODO](#todo)
@@ -284,12 +287,19 @@ may enter a malicious URL in a free text field that is not intended to contain
 URLs and does not provide URL validation. Most e-mail clients display URLs as
 links. *Mitigates XSS, phishing, malware infection and other attacks.*
 
+###### XSS protection in HAML templates
+
+- [ ] Be careful when using `!=` in Haml and it should be made sure that no
+user data is rendered unescaped. The `!=` notation in Haml works the way
+`<%= raw(…) %>` works in ERB. See [(example code)](#haml-xss-protection).
+
 Resources:
 - [Ruby on Rails Security Guide - XSS](http://guides.rubyonrails.org/security.html#cross-site-scripting-xss)
 - [OWASP XSS Filter Evasion Cheat Sheet](https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet)
 - [OWASP Ruby on Rails Cheatsheet - Cross-site Scripting (XSS)](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet#Cross-site_Scripting_.28XSS.29)
 - [Plataformatec Blog - The new HTML sanitizer in Rails 4.2](http://blog.plataformatec.com.br/2014/07/the-new-html-sanitizer-in-rails-4-2)
 - [Brakeman Pro - Cross-Site Scripting in Rails](https://brakemanpro.com/2017/09/08/cross-site-scripting-in-rails)
+- [Preventing security issues in Rails](https://www.railscarma.com/blog/technical-articles/preventing-security-issues-rails/)
 
 #### HTTP & TLS
 - [ ] Force HTTPS over TLS (formerly known as SSL). Set 
@@ -315,6 +325,27 @@ gem](https://github.com/twitter/secureheaders). *Mitigates several attacks.*
 - [ ] Consider obfuscating the web server banner string. In other words, hide
  your web server name and version. *Mitigates HTTP fingerprinting, making it 
  harder for attackers to determine which exploits may work on your web server.* 
+
+#### Memcached Security
+
+- [ ] Use a firewall. Memcached needs to be accessible from your other servers
+but there's no reason to expose it to the internet. In short, only your other
+production servers have access to your production memcached servers. This alone
+would prevent your server from being used in an attack. Memcached out of the box
+doesn't use authentication so anyone who can connect to your server will be able
+to read your data.
+- [ ] Listen on a private interface. If you're running one server for your Rails
+application and memcached, you should listen on `127.0.0.1`. For availability
+reasons, you shouldn't have 1 server in production anyway. For staging and test
+environments, follow this rule. For production setups where you have multiple
+Rails servers that need to connect to memcached, use the private IP of the
+server. This is something like `192.168.0.1`, `172.16.0.1`, or `10.0.0.1`. When
+you start memcached, use `--listen 127.0.0.1` or `--listen 192.168.0.1`.
+- [ ] Disable UDP. It is enabled by default. To disable UDP, use `-U 0` when
+starting memcached.
+
+Resources:
+- [Memcached Security aka Don't Attack GitHub](https://www.engineyard.com/blog/memcached-security-aka-dont-attack-github-)
 
 #### Authorization (Pundit)
 - [ ] Implement authorization at the back end. Hiding links/controls in the UI
@@ -447,18 +478,30 @@ environment. Place them within a `group :development, :test do` block
 in the `Gemfile`. *Prevents leakage of exceptions and even **REPL access** 
 if using better_errors + web-console.*
 
-###### Credentials & Secrets
-- [ ] Do not commit sensitive data such as `secret_key_base`, DB, and API
-credentials to git repositories. Avoid storing credentials in the source code,
-use environment variables instead. If not possible, ensure all sensitive files
-such as `/config/database.yml`, `config/secrets.yml` (and possibly
-`/db/seeds.rb` if it is used to create seed users for production) are included in
-`.gitignore`. *Mitigates credential leaks/theft.*
-- [ ] Use different secrets in the development and production environments. 
-*Mitigates credential leaks/theft.*
-- [ ] Use a `secret_key_base` with over 30 random characters. The `rake secret`
- command generates such strong keys. *Strengthens cookie encryption, 
- mitigating multiple cookie/session related attacks.* 
+###### Credentials
+- [ ] The encryption key, located on `config/master.key` is created when you run
+`rails new`. It's also added to `.gitignore` so it doesn't get committed to your
+repository. *Mitigates credential leaks/theft.*
+- [ ] Don't edit the `config/credentials.yml.enc` file directly. To add
+credentials, run `bin/rails credentials:edit`. Use a flat format which means you
+don't have to put development or production anymore. *Mitigates credential
+leaks/theft.*
+- [ ] If you want to generate a new secret key base run, `bin/rails secret` and
+add that to your credentials by running `bin/rails credentials:edit`.
+- [ ] Upload `master.key` securely. You can scp or sftp the file. Upload the key
+to a shared directory. Shared here means shared between releases, not a shared
+filesystem. On each deploy, you symlink `config/master.key` to
+`/path/to/shared/config/master.key`.
+- [ ] If you need to give a developer a copy of the key, never send it via email
+(unless you're using encrypted emails which most of us don't!) You can use a
+password manager because they use encryption.
+- [ ] Put the key on the `RAILS_MASTER_KEY` environment variable. In some cases
+where you can't upload a file, this is the only option. Even though this is
+convenient, make sure you know the risks of using environment variables. The
+risks can be mitigated, but if you can upload master.key then use that option.
+
+Resources:
+ - [Rails Encrypted Credentials on Rails 5.2](https://www.engineyard.com/blog/rails-encrypted-credentials-on-rails-5.2)
 
 #### Routing, Template Selection, and Redirection
 - [ ] Don't perform URL redirection based on user inputted strings. In other 
@@ -622,6 +665,18 @@ Rack Attack is a Rack middleware that provides throttling among other features.
 Rack::Attack.throttle('logins/email', :limit => 6, :period => 60.seconds) do |req|
   req.params['email'] if req.path == '/login' && req.post?
 end
+```
+
+#### HAML: XSS protection
+By default,
+```ruby
+="<em>emphasized<em>"
+!= "<em>emphasized<em>"
+```
+compiles to:
+```ruby
+&lt;em&gt;emphasized&lt;/em&gt;
+<em>emphasized<em>
 ```
 
 ## Authors
