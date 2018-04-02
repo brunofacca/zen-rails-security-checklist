@@ -40,6 +40,7 @@ earlier versions and fixed in Rails 4 are not included.
         - [Handling User Input](#handling-user-input)
         - [Output Escaping & Sanitization](#output-escaping--sanitization)
         - [XSS protection in HAML templates](#xss-protection-in-haml-templates)
+    - [Insecure Direct Object Reference](#insecure-direct-object-reference)
     - [HTTP & TLS](#http--tls)
         - [Security-related headers](#security-related-headers)
     - [Memcached Security](#memcached-security)
@@ -300,6 +301,19 @@ Resources:
 - [Plataformatec Blog - The new HTML sanitizer in Rails 4.2](http://blog.plataformatec.com.br/2014/07/the-new-html-sanitizer-in-rails-4-2)
 - [Brakeman Pro - Cross-Site Scripting in Rails](https://brakemanpro.com/2017/09/08/cross-site-scripting-in-rails)
 - [Preventing security issues in Rails](https://www.railscarma.com/blog/technical-articles/preventing-security-issues-rails/)
+
+#### Insecure Direct Object Reference
+- [ ] An IDOR issue arises when the user is supposed to have access to url
+`"/get/post/6"`, for example, but not `"/get/post/9"` but the system does not
+properly check those permissions. And if we change "6" in the URL, what happens?
+We can see the data of all users. This may be due to the fact that the data was
+generated as follows: `@user = User.find_by(id: params[:user_id])` – which is
+basically getting the ID from the GET parameter in the URL. Instead a more
+secure way of doing this is setting the `@user` parameter based on the
+`"current_user"` session variable like this: `@user = current_user`.
+
+Resources:
+- [Rails Vulnerabilities and Where To Find Them – Part 1](https://www.vdalabs.com/2018/01/12/rails-vulnerabilities-find-part-1/)
 
 #### HTTP & TLS
 - [ ] Force HTTPS over TLS (formerly known as SSL). Set 
