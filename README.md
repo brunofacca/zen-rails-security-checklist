@@ -58,6 +58,7 @@ earlier versions and fixed in Rails 4 are not included.
     - [Testing](#testing)
     - [Others](#others)
 - [Details and Code Samples](#details-and-code-samples)
+    - [Command Injection example](#command-injection-example)
     - [Password validation regex](#password-validation-regex)
     - [Pundit: ensure all actions are authorized](#pundit-ensure-all-actions-are-authorized)
     - [Pundit: only display appropriate records in select boxes](#pundit-only-display-appropriate-records-in-select-boxes)
@@ -85,12 +86,15 @@ variables or the [ActiveRecord::Sanitization
 methods](http://api.rubyonrails.org/classes/ActiveRecord/Sanitization/ClassMethods.html#method-i-sanitize_conditions)
 to sanitize user input used in DB queries. *Mitigates SQL injection attacks.*
 - [ ] Don't pass user inputted strings to methods capable of evaluating 
-code or running O.S. commands such as `eval`, `system`, `syscall`, `%x()`, `open`, `popen<n>`, `File.read`, `File.write`, and 
-`exec`. *Mitigates command injection attacks.*
+code or running O.S. commands such as `eval`, `system`, `syscall`, `%x()`,
+`open`, `popen<n>`, `File.read`, `File.write`, and `exec`. Using regular
+expressions is a good way to sanitize it ([code sample](#command-injection-example)).
+*Mitigates command injection attacks.*
 
 Resources:
 - [Ruby on Rails Security Guide - SQL Injection](http://guides.rubyonrails.org/security.html#sql-injection)
 - [Rails SQL Injection Examples](https://rails-sqli.org/)
+- [Step Up the Security of Your Rails App | Part 1](https://www.ombulabs.com/blog/rails/security/rails-security.html)
 
 #### Authentication
 Broken Authentication and Session Management are #2 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
@@ -598,6 +602,28 @@ integration. Other options are the
 *Mitigates automated SPAM (spambots).*
 
 ## Details and Code Samples
+
+#### Command Injection example
+```
+# User input
+params[:shop][:items_ids] # Maybe you expect this to be an array inside a string.
+                          # But it can contain something very dangerous like:
+                          # "Kernel.exec('Whatever OS command you want')"
+
+# Vulnerable code
+evil_string = params[:shop][:items_ids]
+eval(evil_string)
+```
+
+If you see a call to eval you must be very sure that you are properly sanitizing
+it. Using regular expressions is a good way to accomplish that.
+```
+# Secure code
+evil_string = params[:shop][:items_ids]
+secure_string = /\[\d*,?\d*,?\d*\]/.match(evil_string).to_s
+
+eval(secure_string)
+```
 
 #### Password validation regex
 We may implement password strength validation in Devise by adding the 
