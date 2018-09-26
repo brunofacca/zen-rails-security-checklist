@@ -782,6 +782,7 @@ inspiration.
 - [Rails Security Audit by Hardhat](https://github.com/hardhatdigital/rails-security-audit)
 - [Rails Security Checklist by Eliot Sykes](https://github.com/eliotsykes/rails-security-checklist)
 - [Ruby on Rails Security 17-Item Checklist](https://www.engineyard.com/blog/ruby-on-rails-security-checklist)
+- [Rails security best practices](https://github.com/ankane/secure_rails)
 
 ## License
 
