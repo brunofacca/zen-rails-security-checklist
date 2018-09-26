@@ -49,6 +49,7 @@ earlier versions and fixed in Rails 4 are not included.
         - [File Uploads](#file-uploads)
         - [File Downloads](#file-downloads)
     - [Cross-Site Request Forgery (CSRF)](#cross-site-request-forgery-csrf)
+    - [Cross Origin Resource Sharing (CORS)][#cross-origin-resource-sharing]
     - [Sensitive Data Exposure](#sensitive-data-exposure)
         - [Credentials](#credentials)
     - [Routing, Template Selection, and Redirection](#routing-template-selection-and-redirection)
@@ -60,6 +61,7 @@ earlier versions and fixed in Rails 4 are not included.
     - [Password validation regex](#password-validation-regex)
     - [Pundit: ensure all actions are authorized](#pundit-ensure-all-actions-are-authorized)
     - [Pundit: only display appropriate records in select boxes](#pundit-only-display-appropriate-records-in-select-boxes)
+    - [rack-cors configuration](#rack-cors-configuration)
     - [Convert filter_parameters into a whitelist](#convert-filter_parameters-into-a-whitelist)
     - [Throttling Requests](#throttling-requests)
     - [HAML: XSS protection](#haml-xss-protection)
@@ -453,6 +455,18 @@ Resources:
 - [Ruby on Rails Security Guide - CSRF](http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)
 - [Big Binary Blog - Each form gets its own CSRF token in Rails 5](http://blog.bigbinary.com/2016/01/11/per-form-csrf-token-in-rails-5.html)
 
+#### Cross Origin Resource Sharing (CORS)
+- [ ] Occasionally the need to share some resources across many domains appears.
+For example, you want to upload a file using AJAX request and send it to the
+other app. The receiving side should specify a whitelist of domains that are
+allowed to make those requests. There are few HTTP headers that control that.
+
+You can use `rack-cors` gem and in `config/application.rb` specify your
+configuration ([code sample](#rack-cors-configuration)).
+
+Resources:
+- [Security issues solutions in RoR](https://syndicode.com/2017/10/23/security-issues-solutions-in-ror/)
+
 #### Sensitive Data Exposure
 - [ ] If possible, avoid storing sensitive data such as credit cards, tax IDs
 and third-party authentication credentials in your application. If not 
@@ -664,6 +678,23 @@ if Rails.env.production?
 else
   # Keep the default blacklist approach in the development environment
   Rails.application.config.filter_parameters += [:password]
+end
+```
+
+#### rack-cors configuration
+
+```
+module Sample
+  class Application < Rails::Application
+    config.middleware.use Rack::Cors do
+      allow do
+        origins 'someserver.example.com'
+        resource %r{/users/\d+.json},
+          headers: ['Origin', 'Accept', 'Content-Type'],
+          methods: [:post, :get]
+      end
+    end
+  end
 end
 ```
 
