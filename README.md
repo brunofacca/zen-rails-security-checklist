@@ -49,6 +49,7 @@ earlier versions and fixed in Rails 4 are not included.
         - [File Uploads](#file-uploads)
         - [File Downloads](#file-downloads)
     - [Cross-Site Request Forgery (CSRF)](#cross-site-request-forgery-csrf)
+    - [Cross Origin Resource Sharing (CORS)](#cross-origin-resource-sharing)
     - [Sensitive Data Exposure](#sensitive-data-exposure)
         - [Credentials](#credentials)
     - [Routing, Template Selection, and Redirection](#routing-template-selection-and-redirection)
@@ -57,9 +58,11 @@ earlier versions and fixed in Rails 4 are not included.
     - [Testing](#testing)
     - [Others](#others)
 - [Details and Code Samples](#details-and-code-samples)
+    - [Command Injection example](#command-injection-example)
     - [Password validation regex](#password-validation-regex)
     - [Pundit: ensure all actions are authorized](#pundit-ensure-all-actions-are-authorized)
     - [Pundit: only display appropriate records in select boxes](#pundit-only-display-appropriate-records-in-select-boxes)
+    - [rack-cors configuration](#rack-cors-configuration)
     - [Convert filter_parameters into a whitelist](#convert-filter_parameters-into-a-whitelist)
     - [Throttling Requests](#throttling-requests)
     - [HAML: XSS protection](#haml-xss-protection)
@@ -83,12 +86,15 @@ variables or the [ActiveRecord::Sanitization
 methods](http://api.rubyonrails.org/classes/ActiveRecord/Sanitization/ClassMethods.html#method-i-sanitize_conditions)
 to sanitize user input used in DB queries. *Mitigates SQL injection attacks.*
 - [ ] Don't pass user inputted strings to methods capable of evaluating 
-code or running O.S. commands such as `eval`, `system`, `syscall`, `%x()`, `open`, `popen<n>`, `File.read`, `File.write`, and 
-`exec`. *Mitigates command injection attacks.*
+code or running O.S. commands such as `eval`, `system`, `syscall`, `%x()`,
+`open`, `popen<n>`, `File.read`, `File.write`, and `exec`. Using regular
+expressions is a good way to sanitize it ([code sample](#command-injection-example)).
+*Mitigates command injection attacks.*
 
 Resources:
 - [Ruby on Rails Security Guide - SQL Injection](http://guides.rubyonrails.org/security.html#sql-injection)
 - [Rails SQL Injection Examples](https://rails-sqli.org/)
+- [Step Up the Security of Your Rails App | Part 1](https://www.ombulabs.com/blog/rails/security/rails-security.html)
 
 #### Authentication
 Broken Authentication and Session Management are #2 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
@@ -453,6 +459,18 @@ Resources:
 - [Ruby on Rails Security Guide - CSRF](http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf)
 - [Big Binary Blog - Each form gets its own CSRF token in Rails 5](http://blog.bigbinary.com/2016/01/11/per-form-csrf-token-in-rails-5.html)
 
+#### Cross Origin Resource Sharing (CORS)
+- [ ] Occasionally the need to share some resources across many domains appears.
+For example, you want to upload a file using AJAX request and send it to the
+other app. The receiving side should specify a whitelist of domains that are
+allowed to make those requests. There are few HTTP headers that control that.
+
+You can use `rack-cors` gem and in `config/application.rb` specify your
+configuration ([code sample](#rack-cors-configuration)).
+
+Resources:
+- [Security issues solutions in RoR](https://syndicode.com/2017/10/23/security-issues-solutions-in-ror/)
+
 #### Sensitive Data Exposure
 - [ ] If possible, avoid storing sensitive data such as credit cards, tax IDs
 and third-party authentication credentials in your application. If not 
@@ -585,6 +603,28 @@ integration. Other options are the
 
 ## Details and Code Samples
 
+#### Command Injection example
+```
+# User input
+params[:shop][:items_ids] # Maybe you expect this to be an array inside a string.
+                          # But it can contain something very dangerous like:
+                          # "Kernel.exec('Whatever OS command you want')"
+
+# Vulnerable code
+evil_string = params[:shop][:items_ids]
+eval(evil_string)
+```
+
+If you see a call to eval you must be very sure that you are properly sanitizing
+it. Using regular expressions is a good way to accomplish that.
+```
+# Secure code
+evil_string = params[:shop][:items_ids]
+secure_string = /\[\d*,?\d*,?\d*\]/.match(evil_string).to_s
+
+eval(secure_string)
+```
+
 #### Password validation regex
 We may implement password strength validation in Devise by adding the 
 following code to the `User` model.
@@ -667,6 +707,23 @@ else
 end
 ```
 
+#### rack-cors configuration
+
+```
+module Sample
+  class Application < Rails::Application
+    config.middleware.use Rack::Cors do
+      allow do
+        origins 'someserver.example.com'
+        resource %r{/users/\d+.json},
+          headers: ['Origin', 'Accept', 'Content-Type'],
+          methods: [:post, :get]
+      end
+    end
+  end
+end
+```
+
 #### Throttling Requests
 
 On some pages like the login page, you'll want to throttle your users to a few
@@ -725,6 +782,7 @@ inspiration.
 - [Rails Security Audit by Hardhat](https://github.com/hardhatdigital/rails-security-audit)
 - [Rails Security Checklist by Eliot Sykes](https://github.com/eliotsykes/rails-security-checklist)
 - [Ruby on Rails Security 17-Item Checklist](https://www.engineyard.com/blog/ruby-on-rails-security-checklist)
+- [Rails security best practices](https://github.com/ankane/secure_rails)
 
 ## License
 
