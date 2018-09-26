@@ -49,7 +49,7 @@ earlier versions and fixed in Rails 4 are not included.
         - [File Uploads](#file-uploads)
         - [File Downloads](#file-downloads)
     - [Cross-Site Request Forgery (CSRF)](#cross-site-request-forgery-csrf)
-    - [Cross Origin Resource Sharing (CORS)][#cross-origin-resource-sharing]
+    - [Cross Origin Resource Sharing (CORS)](#cross-origin-resource-sharing)
     - [Sensitive Data Exposure](#sensitive-data-exposure)
         - [Credentials](#credentials)
     - [Routing, Template Selection, and Redirection](#routing-template-selection-and-redirection)
