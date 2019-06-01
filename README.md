@@ -293,6 +293,7 @@ template treat all input the same as you would in a regular ERB template:
 may enter a malicious URL in a free text field that is not intended to contain
 URLs and does not provide URL validation. Most e-mail clients display URLs as
 links. *Mitigates XSS, phishing, malware infection and other attacks.*
+- [ ] If an I18n key ends up with `_html`, it will automatically be marked as html safe while the key interpolations will be escaped! See [(example code)](#when-i18n-key-ends-up-with-_html).
 
 ###### XSS protection in HAML templates
 
@@ -307,6 +308,7 @@ Resources:
 - [Plataformatec Blog - The new HTML sanitizer in Rails 4.2](http://blog.plataformatec.com.br/2014/07/the-new-html-sanitizer-in-rails-4-2)
 - [Brakeman Pro - Cross-Site Scripting in Rails](https://brakemanpro.com/2017/09/08/cross-site-scripting-in-rails)
 - [Preventing security issues in Rails](https://www.railscarma.com/blog/technical-articles/preventing-security-issues-rails/)
+- [Security tips for rails apps](https://drivy.engineering/security-tips-for-rails-apps/)
 
 #### Insecure Direct Object Reference
 - [ ] An IDOR issue arises when the user is supposed to have access to url
@@ -736,6 +738,27 @@ Rack Attack is a Rack middleware that provides throttling among other features.
 Rack::Attack.throttle('logins/email', :limit => 6, :period => 60.seconds) do |req|
   req.params['email'] if req.path == '/login' && req.post?
 end
+```
+
+#### When I18n key ends up with \_html
+
+Instead of the following example:
+```
+# en.yml
+en:
+  hello: "Welcome <strong>%{user_name}</strong>!"
+```
+```
+<%= t('hello', user_name: current_user.first_name).html_safe %>
+```
+Use the next one:
+```
+# en.yml
+en:
+  hello_html: "Welcome <strong>%{user_name}</strong>!"
+```
+```
+<%= t('hello_html', user_name: current_user.first_name) %>
 ```
 
 #### HAML: XSS protection
