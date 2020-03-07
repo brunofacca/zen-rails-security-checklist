@@ -113,9 +113,8 @@ brute-force attacks.*
     dictionary need only include words meeting that requirement. 
     - A list of commonly used passwords such as
     [these](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
-    The [password_strength](https://github.com/fnando/password_strength) and
-    [StrongPassword](https://github.com/bdmac/strong_password) gems provide such
-    feature.
+    The [StrongPassword](https://github.com/bdmac/strong_password) gem provide
+    such feature.
     - A leaked password database such as [PasswordPing](https://www.passwordping.com/docs-passwords-api/).
     - Context-specific words, such as the name of the application, the
     username, and derivatives thereof.
@@ -125,13 +124,12 @@ latest [NIST Guidelines](https://pages.nist.gov/800-63-3/sp800-63b.html) advise
 against it. An alternative is to increase the minimum length requirement and
 encourage the usage of passphrases. *Mitigate brute-force attacks.*
     - Devise: use a Devise-specific gem such as
-    [devise_security_extension](https://github.com/phatworx/devise_security_extension),
+    [devise-security](https://github.com/devise-security/devise-security),
     [devise_zxcvbn](https://github.com/bitzesty/devise_zxcvbn) or one of the 
     following authentication-agnostic solutions.
-    - The [password_strength](https://github.com/fnando/password_strength) and
-    [StrongPassword](https://github.com/bdmac/strong_password) gems or a regex
-    validation ([code sample](#password-validation-regex)) should work with most
-    authentication setups. 
+    - The [StrongPassword](https://github.com/bdmac/strong_password) gem or a
+    regex validation ([code sample](#password-validation-regex)) should work
+    with most authentication setups.
 - [ ] Lock the account after multiple failed login attempts. *Mitigates 
 brute-force attacks.*
     - Devise: activate the [lockable
@@ -192,7 +190,7 @@ depth](https://en.wikipedia.org/wiki/Defense_in_depth_(computing))).
 - [ ] Consider limiting the number of simultaneous sessions per account. *May
  reduce application exposure on account compromise (e.g. leaked passwords).*
     - Devise: use the
-    [devise_security_extension](https://github.com/phatworx/devise_security_extension)
+    [devise-security](https://github.com/devise-security/devise-security)
     gem.
 - [ ] Avoid implementing "security questions" such as "What is your mother's
 maiden name?" as their answers may be reused across multiple sites and easily
@@ -553,8 +551,8 @@ view to be rendered. *Prevents attackers from rendering arbitrary views such as
 match ':controller(/:action(/:id(.:format)))'` and make non-action controller 
 methods private. *Mitigates unintended access to controller methods.*
  
- Resources:
- - [OWASP Ruby on Rails Cheatsheet - Redirects and Forwards (URL validation)](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet#Redirects_and_Forwards)
+Resources:
+- [OWASP Ruby on Rails Cheatsheet - Redirects and Forwards (URL validation)](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet#Redirects_and_Forwards)
 
 #### Third-party Software
 - [ ] Apply the latest security patches in the OS frequently. Pay special 
@@ -564,8 +562,8 @@ servers.
 - [ ] Update Ruby frequently.
 - [ ] Watch out for security vulnerabilities in your gems. Run 
 [bundler-audit](https://github.com/rubysec/bundler-audit) frequently or use 
-a service like [Snyk](https://snyk.io), [Gemnasium](https://gemnasium.com/) 
-(both free for open-source development) or [Appcanary](https://appcanary.com/).
+a service like [Snyk](https://snyk.io), [GuardRails](https://www.guardrails.io/) 
+(both free for open-source development).
 
 #### Security Tools
 - [ ] Run [Brakeman](http://brakemanscanner.org/) before each deploy. 
@@ -806,6 +804,9 @@ inspiration.
 - [Rails Security Checklist by Eliot Sykes](https://github.com/eliotsykes/rails-security-checklist)
 - [Ruby on Rails Security 17-Item Checklist](https://www.engineyard.com/blog/ruby-on-rails-security-checklist)
 - [Rails security best practices](https://github.com/ankane/secure_rails)
+- [Awesome Ruby Security resources](https://github.com/pxlpnk/awesome-ruby-security)
+- [Awesome Rails Security](https://github.com/edwardqiu/awesome-rails-security)
+- [Securing Sensitive Data in Rails](https://ankane.org/sensitive-data-rails)
 
 ## License
 
