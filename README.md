@@ -40,6 +40,7 @@ earlier versions and fixed in Rails 4 are not included.
         - [Handling User Input](#handling-user-input)
         - [Output Escaping & Sanitization](#output-escaping--sanitization)
         - [XSS protection in HAML templates](#xss-protection-in-haml-templates)
+        - [Content Security Policy (CSP)](#content-security-policy-csp)
     - [Insecure Direct Object Reference](#insecure-direct-object-reference)
     - [HTTP & TLS](#http--tls)
         - [Security-related headers](#security-related-headers)
@@ -206,7 +207,6 @@ role to themselves.*
 - [ ] Consider restricting administrator access by IP. If the client's IP is
 dynamic, restrict by IP block/ASN or by country via IP geolocation.
 
-
 #### Sessions & Cookies
 Broken Authentication and Session Management are #2 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
 - [ ] Don't store data such as money/point balances or user privileges in a
@@ -307,6 +307,14 @@ Resources:
 - [Brakeman Pro - Cross-Site Scripting in Rails](https://brakemanpro.com/2017/09/08/cross-site-scripting-in-rails)
 - [Preventing security issues in Rails](https://www.railscarma.com/blog/technical-articles/preventing-security-issues-rails/)
 - [Security tips for rails apps](https://drivy.engineering/security-tips-for-rails-apps/)
+
+###### Content Security Policy (CSP)
+- [ ] Content Security Policy (CSP) is an added layer of security that helps to
+detect and mitigate various types of attacks on our web applications, including
+Cross Site Scripting (XSS) and data injection attacks.
+
+Resources:
+- [Rails 5.2 DSL for configuring Content Security Policy](https://blog.bigbinary.com/2018/10/23/rails-5-2-adds-dsl-for-configuring-content-security-policy-header.html)
 
 #### Insecure Direct Object Reference
 - [ ] An IDOR issue arises when the user is supposed to have access to url
