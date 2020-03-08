@@ -558,7 +558,7 @@ view to be rendered. *Prevents attackers from rendering arbitrary views such as
 - [ ] Avoid "catch-all" routes such as `
 match ':controller(/:action(/:id(.:format)))'` and make non-action controller 
 methods private. *Mitigates unintended access to controller methods.*
- 
+
 Resources:
 - [OWASP Ruby on Rails Cheatsheet - Redirects and Forwards (URL validation)](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet#Redirects_and_Forwards)
 
@@ -578,12 +578,17 @@ a service like [Snyk](https://snyk.io), [GuardRails](https://www.guardrails.io/)
 If using an automated code review tool like 
 [Code Climate](https://codeclimate.com/), enable the [Brakeman 
 engine](https://docs.codeclimate.com/v1.0/docs/brakeman). 
+- [ ] You can use `rubocop` gem and enables security-related rules in the
+`.rubocop.yml` configuration file.
 - [ ] Consider using a continuous security service such as
  [Detectify](https://detectify.com/).
 - [ ] Consider using a Web Application Firewall (WAF) such as 
 [NAXSI](https://github.com/nbs-system/naxsi) for Nginx, 
 [ModSecurity](https://github.com/SpiderLabs/ModSecurity) for Apache and Nginx. 
 *Mitigates XSS, SQL Injection, DoS, and many other attacks.*
+
+Resources:
+- [How RuboCop can secure your Ruby and Rails Applications](https://www.guardrails.io/blog/2018/11/25/how-rubocop-can-secure-your-ruby-and-rails-applications)
 
 #### Testing
 - [ ] Include security tests in your test suite. Look at OWASP's
