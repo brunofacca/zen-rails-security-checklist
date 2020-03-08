@@ -578,6 +578,9 @@ a service like [Snyk](https://snyk.io), [GuardRails](https://www.guardrails.io/)
 If using an automated code review tool like 
 [Code Climate](https://codeclimate.com/), enable the [Brakeman 
 engine](https://docs.codeclimate.com/v1.0/docs/brakeman). 
+- [ ] Adding a gem trust policy with `MediumSecurity` is a good way to stop
+malicious gems getting installed on the server. For example,
+`bundle --trust-policy MediumSecurity`.
 - [ ] You can use `rubocop` gem and enables security-related rules in the
 `.rubocop.yml` configuration file.
 - [ ] Consider using a continuous security service such as
@@ -588,6 +591,7 @@ engine](https://docs.codeclimate.com/v1.0/docs/brakeman).
 *Mitigates XSS, SQL Injection, DoS, and many other attacks.*
 
 Resources:
+- [Keeping Rails Application Secured](https://fq.nz/blog/2019/04/14/keeping-rails-application-secured.html)
 - [How RuboCop can secure your Ruby and Rails Applications](https://www.guardrails.io/blog/2018/11/25/how-rubocop-can-secure-your-ruby-and-rails-applications)
 
 #### Testing
