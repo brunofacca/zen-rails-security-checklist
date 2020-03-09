@@ -40,6 +40,7 @@ earlier versions and fixed in Rails 4 are not included.
         - [Handling User Input](#handling-user-input)
         - [Output Escaping & Sanitization](#output-escaping--sanitization)
         - [XSS protection in HAML templates](#xss-protection-in-haml-templates)
+        - [Content Security Policy (CSP)](#content-security-policy-csp)
     - [Insecure Direct Object Reference](#insecure-direct-object-reference)
     - [HTTP & TLS](#http--tls)
         - [Security-related headers](#security-related-headers)
@@ -113,9 +114,8 @@ brute-force attacks.*
     dictionary need only include words meeting that requirement. 
     - A list of commonly used passwords such as
     [these](https://github.com/danielmiessler/SecLists/tree/master/Passwords).
-    The [password_strength](https://github.com/fnando/password_strength) and
-    [StrongPassword](https://github.com/bdmac/strong_password) gems provide such
-    feature.
+    The [StrongPassword](https://github.com/bdmac/strong_password) gem provide
+    such feature.
     - A leaked password database such as [PasswordPing](https://www.passwordping.com/docs-passwords-api/).
     - Context-specific words, such as the name of the application, the
     username, and derivatives thereof.
@@ -125,13 +125,12 @@ latest [NIST Guidelines](https://pages.nist.gov/800-63-3/sp800-63b.html) advise
 against it. An alternative is to increase the minimum length requirement and
 encourage the usage of passphrases. *Mitigate brute-force attacks.*
     - Devise: use a Devise-specific gem such as
-    [devise_security_extension](https://github.com/phatworx/devise_security_extension),
+    [devise-security](https://github.com/devise-security/devise-security),
     [devise_zxcvbn](https://github.com/bitzesty/devise_zxcvbn) or one of the 
     following authentication-agnostic solutions.
-    - The [password_strength](https://github.com/fnando/password_strength) and
-    [StrongPassword](https://github.com/bdmac/strong_password) gems or a regex
-    validation ([code sample](#password-validation-regex)) should work with most
-    authentication setups. 
+    - The [StrongPassword](https://github.com/bdmac/strong_password) gem or a
+    regex validation ([code sample](#password-validation-regex)) should work
+    with most authentication setups.
 - [ ] Lock the account after multiple failed login attempts. *Mitigates 
 brute-force attacks.*
     - Devise: activate the [lockable
@@ -192,7 +191,7 @@ depth](https://en.wikipedia.org/wiki/Defense_in_depth_(computing))).
 - [ ] Consider limiting the number of simultaneous sessions per account. *May
  reduce application exposure on account compromise (e.g. leaked passwords).*
     - Devise: use the
-    [devise_security_extension](https://github.com/phatworx/devise_security_extension)
+    [devise-security](https://github.com/devise-security/devise-security)
     gem.
 - [ ] Avoid implementing "security questions" such as "What is your mother's
 maiden name?" as their answers may be reused across multiple sites and easily
@@ -207,7 +206,6 @@ role to themselves.*
     `devise_parameter_sanitizer.permit`.
 - [ ] Consider restricting administrator access by IP. If the client's IP is
 dynamic, restrict by IP block/ASN or by country via IP geolocation.
-
 
 #### Sessions & Cookies
 Broken Authentication and Session Management are #2 at the [OWASP Top 10](https://www.owasp.org/index.php/Top_10_2013-Top_10).
@@ -309,6 +307,14 @@ Resources:
 - [Brakeman Pro - Cross-Site Scripting in Rails](https://brakemanpro.com/2017/09/08/cross-site-scripting-in-rails)
 - [Preventing security issues in Rails](https://www.railscarma.com/blog/technical-articles/preventing-security-issues-rails/)
 - [Security tips for rails apps](https://drivy.engineering/security-tips-for-rails-apps/)
+
+###### Content Security Policy (CSP)
+- [ ] Content Security Policy (CSP) is an added layer of security that helps to
+detect and mitigate various types of attacks on our web applications, including
+Cross Site Scripting (XSS) and data injection attacks.
+
+Resources:
+- [Rails 5.2 DSL for configuring Content Security Policy](https://blog.bigbinary.com/2018/10/23/rails-5-2-adds-dsl-for-configuring-content-security-policy-header.html)
 
 #### Insecure Direct Object Reference
 - [ ] An IDOR issue arises when the user is supposed to have access to url
@@ -552,9 +558,9 @@ view to be rendered. *Prevents attackers from rendering arbitrary views such as
 - [ ] Avoid "catch-all" routes such as `
 match ':controller(/:action(/:id(.:format)))'` and make non-action controller 
 methods private. *Mitigates unintended access to controller methods.*
- 
- Resources:
- - [OWASP Ruby on Rails Cheatsheet - Redirects and Forwards (URL validation)](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet#Redirects_and_Forwards)
+
+Resources:
+- [OWASP Ruby on Rails Cheatsheet - Redirects and Forwards (URL validation)](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet#Redirects_and_Forwards)
 
 #### Third-party Software
 - [ ] Apply the latest security patches in the OS frequently. Pay special 
@@ -564,20 +570,29 @@ servers.
 - [ ] Update Ruby frequently.
 - [ ] Watch out for security vulnerabilities in your gems. Run 
 [bundler-audit](https://github.com/rubysec/bundler-audit) frequently or use 
-a service like [Snyk](https://snyk.io), [Gemnasium](https://gemnasium.com/) 
-(both free for open-source development) or [Appcanary](https://appcanary.com/).
+a service like [Snyk](https://snyk.io), [GuardRails](https://www.guardrails.io/) 
+(both free for open-source development).
 
 #### Security Tools
 - [ ] Run [Brakeman](http://brakemanscanner.org/) before each deploy. 
 If using an automated code review tool like 
 [Code Climate](https://codeclimate.com/), enable the [Brakeman 
 engine](https://docs.codeclimate.com/v1.0/docs/brakeman). 
+- [ ] Adding a gem trust policy with `MediumSecurity` is a good way to stop
+malicious gems getting installed on the server. For example,
+`bundle --trust-policy MediumSecurity`.
+- [ ] You can use `rubocop` gem and enables security-related rules in the
+`.rubocop.yml` configuration file.
 - [ ] Consider using a continuous security service such as
  [Detectify](https://detectify.com/).
 - [ ] Consider using a Web Application Firewall (WAF) such as 
 [NAXSI](https://github.com/nbs-system/naxsi) for Nginx, 
 [ModSecurity](https://github.com/SpiderLabs/ModSecurity) for Apache and Nginx. 
 *Mitigates XSS, SQL Injection, DoS, and many other attacks.*
+
+Resources:
+- [Keeping Rails Application Secured](https://fq.nz/blog/2019/04/14/keeping-rails-application-secured.html)
+- [How RuboCop can secure your Ruby and Rails Applications](https://www.guardrails.io/blog/2018/11/25/how-rubocop-can-secure-your-ruby-and-rails-applications)
 
 #### Testing
 - [ ] Include security tests in your test suite. Look at OWASP's
@@ -806,6 +821,9 @@ inspiration.
 - [Rails Security Checklist by Eliot Sykes](https://github.com/eliotsykes/rails-security-checklist)
 - [Ruby on Rails Security 17-Item Checklist](https://www.engineyard.com/blog/ruby-on-rails-security-checklist)
 - [Rails security best practices](https://github.com/ankane/secure_rails)
+- [Awesome Ruby Security resources](https://github.com/pxlpnk/awesome-ruby-security)
+- [Awesome Rails Security](https://github.com/edwardqiu/awesome-rails-security)
+- [Securing Sensitive Data in Rails](https://ankane.org/sensitive-data-rails)
 
 ## License
 
